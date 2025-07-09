@@ -6,14 +6,17 @@ function trc(message) {
   }
 }
 
+
 //ipuaChanged + ipuaPVCountChanged
 setTimeout(async () => {
+
+
   const ipUaName = 'aidp_tt_ip_ua';
   const ipUaCountName = 'aidp_tt_ip_uaPVCount';
 
   const date = new Date();
   date.setMonth(date.getMonth() + 1);
-
+ 
 
 
 
@@ -21,14 +24,18 @@ setTimeout(async () => {
   let ipuaPVCount;
   let sCookieIpuaPVCountVal;
 
+  if (!window.aidpSCookieList) {
+    window.aidpSCookieList = await window.adenty?.scookie?.get();
+  }
+
   try {
-    ipUa = JSON.parse((await window.adenty.scookie.get(ipUaName))?.value); 
+    ipUa = JSON.parse(window.aidpSCookieList?.find(i => i.name === ipUaName)?.value); 
   } catch (e) {
     ipUa = null;
   }
   
   try {
-    ipuaPVCount = await window.adenty?.scookie.get(ipUaCountName);
+    ipuaPVCount = window.aidpSCookieList?.find(i => i.name === ipUaCountName);
     sCookieIpuaPVCountVal = Number(ipuaPVCount.value);
   } catch (e) {
     ipuaPVCount = null;
@@ -44,7 +51,7 @@ trc("sCookieIpuaPVCountVal="+sCookieIpuaPVCountVal)
   let browserData
   let ipData
   try {
-    browserInfo = await window.adenty?.scookie.get('aidpbr')
+    browserInfo = window.aidpSCookieList?.find(i => i.name === 'aidpbr');
     browserData = JSON.parse(browserInfo.value);
   } catch (error) {
     browserInfo = null;
@@ -56,7 +63,7 @@ trc("sCookieIpuaPVCountVal="+sCookieIpuaPVCountVal)
     ua: browserData?.value
   })
   
-    
+  
 trc("Curent ipUaData="+ipUaData)
   
   
@@ -80,7 +87,7 @@ trc("Initing scookie")
   
   
   
-    
+  
 trc("ipChanged="+(ipUa.ip !== ipData))
 trc("uaChanged="+(ipUa.ua !== browserData?.value))
   if (ipUa.ip !== ipData || ipUa.ua !== browserData?.value) {
@@ -111,9 +118,8 @@ trc("VisitorIpUaCountChanged! "+ipUaName+"->"+ipUaData+"; "+sCookieIpuaPVCountVa
     value: JSON.stringify(newIpuaPVCount),
     //expires: date.toISOString(), // TODO: make sure that here we do not set to NULL expiredate
   }); 
+
 trc("PVCount++ "+sCookieIpuaPVCountVal+"->"+newIpuaPVCount)
-
-
 
 
 }, 0);
