@@ -1,3 +1,11 @@
+const traceNow = true
+
+function trc(message) {
+  if (traceNow) {
+	  console.trace(message);
+  }
+}
+
 //ipuaChanged + ipuaPVCountChanged
 setTimeout(async () => {
   const ipUaName = 'aidp_tt_ip_ua';
@@ -27,6 +35,8 @@ setTimeout(async () => {
     sCookieIpuaPVCountVal = null;
   }
 
+trc("scookieipUa="+ipUa)
+trc("sCookieIpuaPVCountVal="+sCookieIpuaPVCountVal)
 
 
 
@@ -46,7 +56,8 @@ setTimeout(async () => {
     ua: browserData?.value
   })
   
-  
+    
+trc("Curent ipUaData="+ipUaData)
   
   
 
@@ -63,12 +74,15 @@ setTimeout(async () => {
       value: JSON.stringify(1),
       expires: date.toISOString(),
     });
+trc("Initing scookie")
     return;
   }	
   
   
   
-  
+    
+trc("ipChanged="+(ipUa.ip !== ipData))
+trc("uaChanged="+(ipUa.ua !== browserData?.value))
   if (ipUa.ip !== ipData || ipUa.ua !== browserData?.value) {
     newIpuaPVCount = 1;
 	sCookieIpuaPVCountVal = (sCookieIpuaPVCountVal ? sCookieIpuaPVCountVal: 0) //TODO check when SQL querying whether we have 0 in events, this is not expected
@@ -86,6 +100,7 @@ setTimeout(async () => {
       value: JSON.stringify(ipUaData),
       //expires: date.toISOString(), // TODO: make sure that here we do not set to NULL expiredate
     });
+trc("VisitorIpUaCountChanged! "+ipUaName+"->"+ipUaData+"; "+sCookieIpuaPVCountVal+"->"+newIpuaPVCount)
   }
   else {
 	newIpuaPVCount = (sCookieIpuaPVCountVal ? sCookieIpuaPVCountVal + 1 : 1);
@@ -96,6 +111,7 @@ setTimeout(async () => {
     value: JSON.stringify(newIpuaPVCount),
     //expires: date.toISOString(), // TODO: make sure that here we do not set to NULL expiredate
   }); 
+trc("PVCount++ "+sCookieIpuaPVCountVal+"->"+newIpuaPVCount)
 
 
 
