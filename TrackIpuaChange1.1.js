@@ -101,7 +101,7 @@ trc("uaChanged="+(ipUa.ua !== browserData))
 
     window.adenty.scookie.set({
       name: ipUaName,
-      value: JSON.stringify(ipUaData),
+      value: ipUaData,
       //expires: date.toISOString(), // TODO: make sure that here we do not set to NULL expiredate
     });
 trc("VisitorIpUaCountChanged! "+ipUaName+"->"+ipUaData+"; "+sCookieIpuaPVCountVal+"->"+newIpuaPVCount)
