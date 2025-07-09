@@ -1,7 +1,5 @@
 //FpChanged + fpPVCountChanged
 setTimeout(async () => {
-
-
   const fpName = 'aidp_tt_fp';
   const fpPVCountName = 'aidp_tt_fpPVCount';
 
@@ -15,18 +13,14 @@ setTimeout(async () => {
   let fpPVCount;
   let sCookiefpPVCountVal;
 
-  if (!window.aidpSCookieList) {
-    window.aidpSCookieList = await window.adenty?.scookie?.get();
-  }
-
   try {
-    fp = window.aidpSCookieList?.find(i => i.name === fpName)?.value; 
+    fp = (await window.adenty.scookie.get(fpName))?.value; 
   } catch (e) {
     fp = null;
   }
 
   try {
-    fpPVCount = window.aidpSCookieList?.find(i => i.name === fpPVCountName);
+    fpPVCount = await window.adenty.scookie.get(fpPVCountName);
     sCookiefpPVCountVal = Number(fpPVCount.value);
   } catch (e) {
     fpPVCount = null;

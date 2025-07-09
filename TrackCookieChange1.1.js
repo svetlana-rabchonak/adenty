@@ -1,6 +1,5 @@
 //CookieIdChanged + CookieePVCountChanged
 setTimeout(async () => {
-
   const cGUID = 'aidp_tt_cookieId';
   const ckCountName = 'aidp_tt_ckPVCount'; 
 
@@ -12,12 +11,9 @@ setTimeout(async () => {
   let ckPVCount;
   let sCookieCkPVCountVal;
 
-  if (!window.aidpSCookieList) {
-    window.aidpSCookieList = await window.adenty?.scookie?.get();
-  }
 
   try {
-    ckPVCount = window.aidpSCookieList?.find(i => i.name === ckCountName);
+    ckPVCount = await window.adenty?.scookie.get(ckCountName);
     sCookieCkPVCountVal = Number(ckPVCount.value);
   } catch (e) {
     ckPVCount = null;
