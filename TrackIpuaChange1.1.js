@@ -47,20 +47,17 @@ trc("sCookieIpuaPVCountVal="+sCookieIpuaPVCountVal)
 
 
 
-  let browserInfo
   let browserData
   let ipData
   try {
-    browserInfo = await window.adenty?.astorage?.get('aidpbr');
-    browserData = browserInfo;
+    browserData = btoa(navigator?.userAgent);
   } catch (error) {
-    browserInfo = null;
     browserData = null;
   }
   ipData = window.adenty?.dl?.adenty?.visit?.ipsha
   const ipUaData = JSON.stringify({
     ip: ipData,
-    ua: browserData?.value
+    ua: browserData
   })
   
   
@@ -89,8 +86,8 @@ trc("Initing scookie")
   
   
 trc("ipChanged="+(ipUa.ip !== ipData))
-trc("uaChanged="+(ipUa.ua !== browserData?.value))
-  if (ipUa.ip !== ipData || ipUa.ua !== browserData?.value) {
+trc("uaChanged="+(ipUa.ua !== browserData))
+  if (ipUa.ip !== ipData || ipUa.ua !== browserData) {
     newIpuaPVCount = 1;
 	sCookieIpuaPVCountVal = (sCookieIpuaPVCountVal ? sCookieIpuaPVCountVal: 0) //TODO check when SQL querying whether we have 0 in events, this is not expected
     // window.adenty.event.fireEvent({
