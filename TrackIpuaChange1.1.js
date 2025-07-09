@@ -52,6 +52,7 @@ trc("sCookieIpuaPVCountVal="+sCookieIpuaPVCountVal)
   let ipData
   try {
     browserInfo = await window.adenty?.astorage?.get('aidpbr');
+    browserData = browserInfo;
   } catch (error) {
     browserInfo = null;
     browserData = null;
