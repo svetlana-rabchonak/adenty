@@ -1,11 +1,22 @@
+const traceNow = true
+
+function trc(message) {
+  if (traceNow) {
+	  console.trace(message);
+  }
+}
+
+
 //ipuaChanged + ipuaPVCountChanged
 setTimeout(async () => {
+
+
   const ipUaName = 'aidp_tt_ip_ua';
   const ipUaCountName = 'aidp_tt_ip_uaPVCount';
 
   const date = new Date();
   date.setMonth(date.getMonth() + 1);
-
+ 
 
 
 
@@ -13,20 +24,26 @@ setTimeout(async () => {
   let ipuaPVCount;
   let sCookieIpuaPVCountVal;
 
+  if (!window.aidpSCookieList) {
+    window.aidpSCookieList = await window.adenty?.scookie?.get();
+  }
+
   try {
-    ipUa = JSON.parse((await window.adenty.scookie.get(ipUaName))?.value); 
+    ipUa = JSON.parse(window.aidpSCookieList?.find(i => i.name === ipUaName)?.value); 
   } catch (e) {
     ipUa = null;
   }
   
   try {
-    ipuaPVCount = await window.adenty?.scookie.get(ipUaCountName);
+    ipuaPVCount = window.aidpSCookieList?.find(i => i.name === ipUaCountName);
     sCookieIpuaPVCountVal = Number(ipuaPVCount.value);
   } catch (e) {
     ipuaPVCount = null;
     sCookieIpuaPVCountVal = null;
   }
 
+trc("scookieipUa="+ipUa)
+trc("sCookieIpuaPVCountVal="+sCookieIpuaPVCountVal)
 
 
 
@@ -34,8 +51,7 @@ setTimeout(async () => {
   let browserData
   let ipData
   try {
-    browserInfo = await window.adenty?.scookie.get('aidpbr')
-    browserData = JSON.parse(browserInfo.value);
+    browserInfo = await window.adenty?.astorage?.get('aidpbr');
   } catch (error) {
     browserInfo = null;
     browserData = null;
@@ -47,6 +63,7 @@ setTimeout(async () => {
   })
   
   
+trc("Curent ipUaData="+ipUaData)
   
   
 
@@ -63,12 +80,15 @@ setTimeout(async () => {
       value: JSON.stringify(1),
       expires: date.toISOString(),
     });
+trc("Initing scookie")
     return;
   }	
   
   
   
   
+trc("ipChanged="+(ipUa.ip !== ipData))
+trc("uaChanged="+(ipUa.ua !== browserData?.value))
   if (ipUa.ip !== ipData || ipUa.ua !== browserData?.value) {
     newIpuaPVCount = 1;
 	sCookieIpuaPVCountVal = (sCookieIpuaPVCountVal ? sCookieIpuaPVCountVal: 0) //TODO check when SQL querying whether we have 0 in events, this is not expected
@@ -86,6 +106,7 @@ setTimeout(async () => {
       value: JSON.stringify(ipUaData),
       //expires: date.toISOString(), // TODO: make sure that here we do not set to NULL expiredate
     });
+trc("VisitorIpUaCountChanged! "+ipUaName+"->"+ipUaData+"; "+sCookieIpuaPVCountVal+"->"+newIpuaPVCount)
   }
   else {
 	newIpuaPVCount = (sCookieIpuaPVCountVal ? sCookieIpuaPVCountVal + 1 : 1);
@@ -97,7 +118,7 @@ setTimeout(async () => {
     //expires: date.toISOString(), // TODO: make sure that here we do not set to NULL expiredate
   }); 
 
-
+trc("PVCount++ "+sCookieIpuaPVCountVal+"->"+newIpuaPVCount)
 
 
 }, 0);

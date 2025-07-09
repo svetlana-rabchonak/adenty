@@ -1,5 +1,10 @@
 //vidPVCount
 setTimeout(async () => {
+
+  if (!window.aidpSCookieList) {
+    window.aidpSCookieList = await window.adenty?.scookie?.get();
+  }
+
   const vidPVCountName = 'aidp_tt_vidPVCount'; 
 
   
@@ -11,7 +16,7 @@ setTimeout(async () => {
   let sCookieVidPVCountVal;
 
   try {
-    vidPVCount = await window.adenty?.scookie.get(vidPVCountName);
+    vidPVCount = window.aidpSCookieList?.find(i => i.name === vidPVCountName);
     sCookieVidPVCountVal = Number(vidPVCount.value);
   } catch (e) {
     vidPVCount = null;
